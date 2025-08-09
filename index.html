@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Waste Management | Trash to Treasure</title>
+    <meta name="description" content="AI-powered Smart Waste Management: Detect, sort, and compost waste efficiently for greener communities.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #388e3c;
+            --primary-dark: #2e7d32;
+            --accent: #4caf50;
+            --background: #f6f7fb;
+            --surface: #ffffff;
+            --surface-alt: #f1f8e9;
+            --text: #212121;
+            --text-light: #fff;
+            --border: #e6e9ef;
+        }
+        html {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(90deg, var(--primary) 60%, var(--accent));
+            color: var(--text-light);
+            padding: 2rem 1rem 1rem 1rem;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2.3rem;
+            font-weight: 700;
+        }
+        header p {
+            margin: 0;
+            font-size: 1.15rem;
+            letter-spacing: 0.02em;
+        }
+        nav {
+            background: var(--primary-dark);
+            padding: 0.6rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+        }
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        nav a:hover,
+        nav a:focus {
+            background: var(--primary);
+            outline: none;
+        }
+        main {
+            max-width: 960px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        section {
+            margin-bottom: 2.5rem;
+        }
+        section h2 {
+            margin-top: 0;
+            font-size: 2rem;
+            margin-bottom: 0.7rem;
+        }
+        /* Features */
+        .features {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.2rem;
+        }
+        .feature-box {
+            flex: 1 1 250px;
+            background: var(--surface-alt);
+            padding: 1.3rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(56, 142, 60, 0.07);
+            min-width: 240px;
+            margin-bottom: 1rem;
+            transition: transform 0.18s;
+        }
+        .feature-box:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 4px 24px rgba(56, 142, 60, 0.13);
+        }
+        /* Waste Guide */
+        .search-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 14px;
+            box-shadow: 0 6px 24px rgba(15, 20, 40, 0.07);
+            margin-bottom: 1.5rem;
+        }
+        .search-row {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        #search {
+            flex: 1;
+            padding: 0.9rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+            outline: none;
+        }
+        #btn-search {
+            padding: 0.9rem 1.2rem;
+            background: var(--primary);
+            color: var(--text-light);
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        #btn-search:hover, #btn-search:focus {
+            background: var(--primary-dark);
+        }
+        .suggestions {
+            margin: 1rem 0 0.3rem 0;
+        }
+        .suggestions span {
+            display: inline-block;
+            background: #e8f5e9;
+            color: var(--primary);
+            padding: 0.5em 0.9em;
+            margin: 0.2em 0.3em 0.2em 0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.98em;
+            transition: background 0.16s;
+        }
+        .suggestions span:hover,
+        .suggestions span:focus {
+            background: #c8e6c9;
+            outline: none;
+        }
+        .result {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .item-card {
+            background: var(--surface-alt);
+            padding: 1.1rem 1.3rem;
+            border-radius: 10px;
+            box-shadow: 0 1px 6px rgba(56,142,60,0.07);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.4em 0.8em;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.98em;
+            margin-top: 0.1em;
+        }
+        .cat-organic { background: #d7f0de; color: #28a745; }
+        .cat-recycle { background: #dfeeff; color: #007bff; }
+        .cat-e { background: #fff1dc; color: #ff8c00; }
+        .cat-hazard { background: #ffdfe6; color: #dc3545; }
+        .cat-general { background: #ececec; color: #4b4b4b;}
+        .bins {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin: 1.1rem 0 0.7rem 0;
+        }
+        .bin {
+            flex: 1 1 150px;
+            background: #e8eaf6;
+            padding: 0.9rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e6e6e6;
+            min-width: 120px;
+        }
+        .bin .swatch {
+            height: 52px;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .sw-organic { background: #28a745; }
+        .sw-recycle { background: #007bff; }
+        .sw-ewaste { background: #ff8c00; }
+        .sw-hazard { background: #dc3545; }
+        .sw-general { background: #6c757d; }
+        /* Do's and Don'ts grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.1rem;
+            margin-top: 1.2rem;
+        }
+        ul {
+            margin: 0.3em 0 0 1.2em;
+            padding: 0;
+        }
+        .small { font-size: 0.97em; color: #666; }
+        /* Contact Form */
+        #contactForm {
+            background: var(--surface-alt);
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        #contactForm label {
+            display: block;
+            margin-bottom: 0.2em;
+            font-weight: 500;
+        }
+        #contactForm input,
+        #contactForm textarea {
+            width: 100%;
+            padding: 0.7em;
+            margin-bottom: 1.1em;
+            border: 1px solid #c8e6c9;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #fff;
+        }
+        #contactForm button {
+            width: 100%;
+            background: var(--primary);
+            color: var(--text-light);
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            padding: 0.8em;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        #contactForm button:hover, #contactForm button:focus {
+            background: var(--primary-dark);
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            border: 0;
+        }
+        footer {
+            background: var(--primary-dark);
+            color: var(--text-light);
+            text-align: center;
+            padding: 1.2rem 0 1rem;
+            font-size: 1rem;
+            margin-top: 2.5rem;
+        }
+        /* Responsive tweaks */
+        @media (max-width: 900px) {
+            .features {
+                flex-direction: column;
+            }
+            .bins {
+                flex-direction: column;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.45rem; }
+            main { padding: 0 0.2rem; }
+            .feature-box, .item-card, .search-card, #contactForm { padding: 1rem; }
+            section h2 { font-size: 1.3rem; }
+            nav { flex-direction: column; gap: 0.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Smart Waste Management</h1>
+        <p>AI-powered waste detection and composting suggestions for greener communities</p>
+    </header>
+    <nav aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#guide">Waste Guide</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <main>
+        <section id="home" tabindex="-1">
+            <h2>Welcome</h2>
+            <p>
+                Discover a smarter way to handle your waste! Our AI-powered system helps you detect, sort, and compost waste efficiently—empowering communities to reduce waste and build a greener future.
+            </p>
+        </section>
+        <section id="about" tabindex="-1">
+            <h2>About the Product</h2>
+            <p>
+                Trash to Treasure uses advanced image recognition to identify different waste types. For organic waste, you get tailored composting tips; for recyclables, sorting and recycling instructions; for hazardous and e-waste, safe disposal guidance. <br>
+                Join us in making waste management easy, sustainable, and community-driven!
+            </p>
+        </section>
+        <section id="features" tabindex="-1">
+            <h2>Key Features</h2>
+            <div class="features">
+                <div class="feature-box">
+                    <h3>AI Waste Detection</h3>
+                    <p>Identify your waste instantly using images and get correct sorting advice.</p>
+                </div>
+                <div class="feature-box">
+                    <h3>Composting Suggestions</h3>
+                    <p>Receive eco-friendly, step-by-step composting methods for organic waste.</p>
+                </div>
+                <div class="feature-box">
+                    <h3>Community Dashboard</h3>
+                    <p>Track and compare waste metrics in your community for collective improvement.</p>
+                </div>
+            </div>
+        </section>
+        <section id="guide" tabindex="-1">
+            <h2>Waste Sorting Guide</h2>
+            <div class="search-card" aria-label="Waste search">
+                <div class="search-row">
+                    <label for="search" class="sr-only">Search waste item</label>
+                    <input id="search" type="search" placeholder="Search an item — e.g. banana peel, battery" autocomplete="off" />
+                    <button id="btn-search" aria-label="Find waste category">Find</button>
+                </div>
+                <div class="suggestions" id="suggestions"></div>
+                <div class="result" id="resultArea" hidden>
+                    <div class="item-card">
+                        <h3 id="itemName">Item name</h3>
+                        <div id="categoryBadge"></div>
+                        <div class="method" id="methodText">Disposal method text</div>
+                        <div style="margin-top:0.8em">
+                            <strong>Quick tips:</strong>
+                            <ul id="quickTips" style="margin-top:0.5em"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 style="margin-top:2em;">Visual Sorting Chart</h3>
+            <div class="bins" aria-label="Waste bins">
+                <div class="bin"><div class="swatch sw-organic">Organic</div><div class="small">Food scraps, fruit peels, garden waste</div></div>
+                <div class="bin"><div class="swatch sw-recycle">Recyclable</div><div class="small">Paper, cardboard, plastics, metal</div></div>
+                <div class="bin"><div class="swatch sw-ewaste">E-waste</div><div class="small">Batteries, phones, chargers</div></div>
+                <div class="bin"><div class="swatch sw-hazard">Hazardous</div><div class="small">Paint, chemicals, medical waste</div></div>
+                <div class="bin"><div class="swatch sw-general">General</div><div class="small">Soiled plastics, ceramics, diapers</div></div>
+            </div>
+            <div class="grid">
+                <div class="item-card">
+                    <h4>Do's</h4>
+                    <ul>
+                        <li>Rinse containers before recycling.</li>
+                        <li>Flatten cardboard to save space.</li>
+                        <li>Separate wet (organic) and dry (recyclable) waste.</li>
+                    </ul>
+                </div>
+                <div class="item-card">
+                    <h4>Don'ts</h4>
+                    <ul>
+                        <li>Don't put liquids or food-soaked items in recyclables.</li>
+                        <li>Don't mix hazardous chemicals with regular trash.</li>
+                        <li>Don't put batteries in general bins.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="contact" tabindex="-1">
+            <h2>Contact Us</h2>
+            <form id="contactForm" autocomplete="off" aria-label="Contact form">
+                <label for="name">Your name</label>
+                <input type="text" id="name" name="name" placeholder="e.g. Anya Singh" required>
+                <label for="email">Your email</label>
+                <input type="email" id="email" name="email" placeholder="e.g. anya@email.com" required>
+                <label for="message">Your message</label>
+                <textarea id="message" name="message" placeholder="Type your message..." rows="4" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Trash to Treasure. All Rights Reserved.</p>
+    </footer>
+    <script>
+        // Waste item data
+        const ITEMS = [
+            {name:'banana peel', category:'Organic', method:'Compost at home or facility.', tips:['Remove stickers','Chop pieces']},
+            {name:'plastic bottle', category:'Recyclable', method:'Rinse and recycle.', tips:['Remove caps','Crush to save space']},
+            {name:'phone battery', category:'E-waste', method:'Drop at authorized e-waste center.', tips:['Tape terminals']},
+            {name:'used tissue', category:'General', method:'Dispose in regular trash.', tips:['Seal in a bag if contaminated']},
+            {name:'paint can', category:'Hazardous', method:'Take to hazardous waste point.', tips:['Let small amounts dry before disposal']}
+        ];
+        // DOM
+        const searchEl = document.getElementById('search');
+        const btn = document.getElementById('btn-search');
+        const resultArea = document.getElementById('resultArea');
+        const itemName = document.getElementById('itemName');
+        const categoryBadge = document.getElementById('categoryBadge');
+        const methodText = document.getElementById('methodText');
+        const quickTips = document.getElementById('quickTips');
+        const suggestionsContainer = document.getElementById('suggestions');
+        // Suggestion chips
+        ITEMS.forEach(item => {
+            const chip = document.createElement('span');
+            chip.textContent = item.name;
+            chip.tabIndex = 0;
+            chip.setAttribute('role', 'button');
+            chip.onclick = () => {
+                searchEl.value = item.name;
+                doSearch();
+                searchEl.focus();
+            };
+            chip.onkeydown = (e) => {
+                if(e.key === 'Enter' || e.key === ' ') {
+                    chip.click();
+                }
+            };
+            suggestionsContainer.appendChild(chip);
+        });
+        function badgeClassForCategory(category) {
+            const c = category.toLowerCase();
+            if(c.includes('organic')) return 'badge cat-organic';
+            if(c.includes('recycl')) return 'badge cat-recycle';
+            if(c.includes('e-waste') || c.includes('e waste') || c.includes('ewaste')) return 'badge cat-e';
+            if(c.includes('hazard')) return 'badge cat-hazard';
+            if(c.includes('general')) return 'badge cat-general';
+            return 'badge';
+        }
+        function findItem(q) {
+            q = q.toLowerCase().trim();
+            return ITEMS.find(i => i.name.toLowerCase() === q) || null;
+        }
+        function doSearch() {
+            const q = searchEl.value.trim();
+            const found = findItem(q);
+            resultArea.hidden = false;
+            if(!found) {
+                itemName.textContent = q || 'Unknown';
+                categoryBadge.innerHTML = '<span class="badge">Unknown</span>';
+                methodText.textContent = 'Item not found. Try another search!';
+                quickTips.innerHTML = '';
+                return;
+            }
+            itemName.textContent = found.name;
+            categoryBadge.innerHTML = `<span class="${badgeClassForCategory(found.category)}">${found.category}</span>`;
+            methodText.textContent = found.method;
+            quickTips.innerHTML = found.tips.map(t => `<li>${t}</li>`).join('');
+        }
+        btn.addEventListener('click', doSearch);
+        searchEl.addEventListener('keydown', e => { if(e.key === 'Enter') { e.preventDefault(); doSearch(); } });
+        // Contact form popup
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            alert("Thanks for contacting us! We’ll get back to you soon.");
+            this.reset();
+        });
+    </script>
+</body>
+</html>
